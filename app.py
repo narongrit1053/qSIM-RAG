@@ -357,7 +357,11 @@ Context:
                 else:
                     client = OpenAI(
                         base_url="https://openrouter.ai/api/v1",
-                        api_key=api_key,
+                        api_key=api_key.strip(),
+                        default_headers={
+                            "HTTP-Referer": "http://localhost:8501", # Required by OpenRouter
+                            "X-Title": "NotebookLM-Lite", # Required by OpenRouter
+                        }
                     )
                     stream = client.chat.completions.create(
                         model=model_name,
