@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  rag-app:
+    build: .
+    ports:
+      - "8501:8501"
+    volumes:
+      - .:/app
+      - ./data:/app/data
+      - pip_cache:/root/.cache/pip
+    environment:
+      - CHROMA_DB_IMPL=duckdb+parquet # (Optional but often good for Chroma)
+    # Increase shared memory size for PyTorch/heavy computing just in case, though mostly CPU bound here.
+    shm_size: '2gb'
+
+volumes:
+  pip_cache:

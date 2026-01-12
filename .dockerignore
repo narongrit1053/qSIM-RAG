@@ -1,0 +1,8 @@
+models/
+data/
+__pycache__/
+*.pyc
+.git
+.env
+venv/
+.gemini/
