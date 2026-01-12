@@ -261,7 +261,26 @@ def main():
                 save_config(config)
                 st.toast("API Key saved!")
                 api_key = new_key
-            st.caption("Key is saved locally in config.json")
+            st.caption("Key is saved locally.")
+            
+            if st.button("Test API Key"):
+                with st.spinner("Verifying key..."):
+                    try:
+                        # Test request
+                        test_client = OpenAI(
+                            base_url="https://openrouter.ai/api/v1",
+                            api_key=api_key.strip(),
+                            default_headers={"HTTP-Referer": "http://localhost:8501", "X-Title": "NotebookLM-Lite"}
+                        )
+                        # Simple generation to check auth
+                        test_resp = test_client.chat.completions.create(
+                            model="google/gemini-2.0-flash-exp:free",
+                            messages=[{"role": "user", "content": "Hi"}],
+                            max_tokens=1
+                        )
+                        st.success("✅ Key is valid! Connected to OpenRouter.")
+                    except Exception as e:
+                        st.error(f"❌ Key verification failed: {e}")
             
             # Dynamic Model Selection
             models_data = fetch_openrouter_models()
