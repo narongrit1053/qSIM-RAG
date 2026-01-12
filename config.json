@@ -1,1 +1,5 @@
-{"provider": "Local (Qwen 1.5B)", "api_key": "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", "last_model": "z-ai/glm-4.5-air:free"}
+{
+    "provider": "OpenRouter",
+    "api_key": "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",
+    "last_model": "xiaomi/mimo-v2-flash:free"
+}
