@@ -263,28 +263,6 @@ def main():
                 api_key = new_key
             st.caption("Key is saved locally.")
             
-            if st.button("Test API Key"):
-                with st.spinner(f"Verifying key with {model_name}..."):
-                    try:
-                        # Test request
-                        test_client = OpenAI(
-                            base_url="https://openrouter.ai/api/v1",
-                            api_key=api_key.strip(),
-                            default_headers={"HTTP-Referer": "http://localhost:8501", "X-Title": "NotebookLM-Lite"}
-                        )
-                        # Simple generation to check auth
-                        test_resp = test_client.chat.completions.create(
-                            model=model_name, # Use the selected model!
-                            messages=[{"role": "user", "content": "Hi"}],
-                            max_tokens=1
-                        )
-                        st.success(f"✅ Key is valid! Connected to OpenRouter using {model_name}.")
-                    except Exception as e:
-                        if "429" in str(e):
-                            st.warning(f"⚠️ Key seems valid, but **{model_name}** is rate-limited (busy). Try selecting a different model!")
-                        else:
-                            st.error(f"❌ Key verification failed: {e}")
-            
             # Dynamic Model Selection
             models_data = fetch_openrouter_models()
             model_name = "google/gemini-2.0-flash-exp:free" # Default fallback
@@ -311,6 +289,30 @@ def main():
             else:
                 st.error("Could not fetch models from OpenRouter.")
                 model_name = st.text_input("Model Name", value=model_name)
+
+            st.divider()
+
+            if st.button("Test API Key"):
+                with st.spinner(f"Verifying key with {model_name}..."):
+                    try:
+                        # Test request
+                        test_client = OpenAI(
+                            base_url="https://openrouter.ai/api/v1",
+                            api_key=api_key.strip(),
+                            default_headers={"HTTP-Referer": "http://localhost:8501", "X-Title": "NotebookLM-Lite"}
+                        )
+                        # Simple generation to check auth
+                        test_resp = test_client.chat.completions.create(
+                            model=model_name, # Use the selected model!
+                            messages=[{"role": "user", "content": "Hi"}],
+                            max_tokens=1
+                        )
+                        st.success(f"✅ Key is valid! Connected to OpenRouter using {model_name}.")
+                    except Exception as e:
+                        if "429" in str(e):
+                            st.warning(f"⚠️ Key seems valid, but **{model_name}** is rate-limited (busy). Try selecting a different model!")
+                        else:
+                            st.error(f"❌ Key verification failed: {e}")
 
     # --- Main Chat Area ---
     st.markdown("### Chat")
